@@ -1,0 +1,76 @@
+C:\svnSource\DEV_LATEST\NextGen\ui\VS\AuthService\AuthService\bin\AuthService.dll
+C:\svnSource\DEV_LATEST\NextGen\ui\VS\AuthService\AuthService\bin\AuthService.pdb
+C:\svnSource\DEV_LATEST\NextGen\ui\VS\AuthService\AuthService\obj\Debug\AuthService.dll
+C:\svnSource\DEV_LATEST\NextGen\ui\VS\AuthService\AuthService\obj\Debug\AuthService.pdb
+C:\svnSource\DEV_LATEST\NextGen\ui\VS\AuthService\AuthService\bin\Microsoft.Web.Infrastructure.dll
+C:\svnSource\DEV_LATEST\NextGen\ui\VS\AuthService\AuthService\bin\Newtonsoft.Json.dll
+C:\svnSource\DEV_LATEST\NextGen\ui\VS\AuthService\AuthService\bin\Swashbuckle.Core.dll
+C:\svnSource\DEV_LATEST\NextGen\ui\VS\AuthService\AuthService\bin\System.Net.Http.dll
+C:\svnSource\DEV_LATEST\NextGen\ui\VS\AuthService\AuthService\bin\System.Net.Http.Formatting.dll
+C:\svnSource\DEV_LATEST\NextGen\ui\VS\AuthService\AuthService\bin\System.Net.Http.WebRequest.dll
+C:\svnSource\DEV_LATEST\NextGen\ui\VS\AuthService\AuthService\bin\System.Web.Http.dll
+C:\svnSource\DEV_LATEST\NextGen\ui\VS\AuthService\AuthService\bin\System.Web.Http.WebHost.dll
+C:\svnSource\DEV_LATEST\NextGen\ui\VS\AuthService\AuthService\bin\WebActivatorEx.dll
+C:\svnSource\DEV_LATEST\NextGen\ui\VS\AuthService\AuthService\bin\Newtonsoft.Json.xml
+C:\svnSource\DEV_LATEST\NextGen\ui\VS\AuthService\AuthService\bin\System.Net.Http.xml
+C:\svnSource\DEV_LATEST\NextGen\ui\VS\AuthService\AuthService\bin\System.Net.Http.Formatting.xml
+C:\svnSource\DEV_LATEST\NextGen\ui\VS\AuthService\AuthService\bin\System.Net.Http.WebRequest.xml
+C:\svnSource\DEV_LATEST\NextGen\ui\VS\AuthService\AuthService\bin\System.Web.Http.xml
+C:\svnSource\DEV_LATEST\NextGen\ui\VS\AuthService\AuthService\bin\System.Web.Http.WebHost.xml
+C:\svnSource\DEV_LATEST\NextGen\ui\VS\AuthService\AuthService\bin\MongoDB.Bson.dll
+C:\svnSource\DEV_LATEST\NextGen\ui\VS\AuthService\AuthService\bin\MongoDB.Driver.dll
+C:\svnSource\DEV_LATEST\NextGen\ui\VS\AuthService\AuthService\bin\MongoDB.Bson.pdb
+C:\svnSource\DEV_LATEST\NextGen\ui\VS\AuthService\AuthService\bin\MongoDB.Driver.pdb
+C:\svnSource\DEV_LATEST\NextGen\ui\VS\AuthService\AuthService\obj\Debug\AuthService.csprojResolveAssemblyReference.cache
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\bin\AuthService.dll.config
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\bin\AuthService.dll
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\bin\AuthService.pdb
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\bin\Microsoft.Web.Infrastructure.dll
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\bin\MongoDB.Bson.dll
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\bin\MongoDB.Driver.Core.dll
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\bin\MongoDB.Driver.dll
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\bin\Newtonsoft.Json.dll
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\bin\Swashbuckle.Core.dll
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\bin\System.Net.Http.dll
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\bin\System.Net.Http.Formatting.dll
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\bin\System.Net.Http.WebRequest.dll
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\bin\System.Web.Http.dll
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\bin\System.Web.Http.WebHost.dll
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\bin\WebActivatorEx.dll
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\bin\MongoDB.Bson.xml
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\bin\MongoDB.Driver.xml
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\bin\Newtonsoft.Json.xml
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\bin\System.Net.Http.xml
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\bin\System.Net.Http.Formatting.xml
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\bin\System.Net.Http.WebRequest.xml
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\bin\System.Web.Http.xml
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\bin\System.Web.Http.WebHost.xml
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\obj\Debug\AuthService.csprojResolveAssemblyReference.cache
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\obj\Debug\AuthService.dll
+C:\Users\v634\Documents\Visual Studio 2013\Projects\AuthService\AuthService\obj\Debug\AuthService.pdb
+C:\tenx\AuthService\AuthService\bin\AuthService.dll.config
+C:\tenx\AuthService\AuthService\bin\AuthService.dll
+C:\tenx\AuthService\AuthService\bin\AuthService.pdb
+C:\tenx\AuthService\AuthService\bin\Microsoft.Web.Infrastructure.dll
+C:\tenx\AuthService\AuthService\bin\MongoDB.Bson.dll
+C:\tenx\AuthService\AuthService\bin\MongoDB.Driver.Core.dll
+C:\tenx\AuthService\AuthService\bin\MongoDB.Driver.dll
+C:\tenx\AuthService\AuthService\bin\Newtonsoft.Json.dll
+C:\tenx\AuthService\AuthService\bin\Swashbuckle.Core.dll
+C:\tenx\AuthService\AuthService\bin\System.Net.Http.dll
+C:\tenx\AuthService\AuthService\bin\System.Net.Http.Formatting.dll
+C:\tenx\AuthService\AuthService\bin\System.Net.Http.WebRequest.dll
+C:\tenx\AuthService\AuthService\bin\System.Web.Http.dll
+C:\tenx\AuthService\AuthService\bin\System.Web.Http.WebHost.dll
+C:\tenx\AuthService\AuthService\bin\WebActivatorEx.dll
+C:\tenx\AuthService\AuthService\bin\MongoDB.Bson.xml
+C:\tenx\AuthService\AuthService\bin\MongoDB.Driver.xml
+C:\tenx\AuthService\AuthService\bin\Newtonsoft.Json.xml
+C:\tenx\AuthService\AuthService\bin\System.Net.Http.xml
+C:\tenx\AuthService\AuthService\bin\System.Net.Http.Formatting.xml
+C:\tenx\AuthService\AuthService\bin\System.Net.Http.WebRequest.xml
+C:\tenx\AuthService\AuthService\bin\System.Web.Http.xml
+C:\tenx\AuthService\AuthService\bin\System.Web.Http.WebHost.xml
+C:\tenx\AuthService\AuthService\obj\Debug\AuthService.dll
+C:\tenx\AuthService\AuthService\obj\Debug\AuthService.pdb
+C:\tenx\AuthService\AuthService\obj\Debug\AuthService.csprojResolveAssemblyReference.cache
