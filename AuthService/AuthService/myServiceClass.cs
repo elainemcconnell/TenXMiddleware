@@ -136,6 +136,17 @@ public class myServiceClass : System.Web.Services.WebService
     {
         var collection = getMongoCollection("users");
 
+        var agg = collection.Aggregate()
+                    .Match(new BsonDocument { { "policies.policyID", policyID } })
+                    .Unwind("policies")
+                    .Match(new BsonDocument { { "policies.policyID", policyID } })
+                    .Group(new BsonDocument { {"_id", "$id"}, {"policies", new BsonDocument ( "$push", "$policies" ) } } );
+
+        var x = agg.First().ToJson();
+
+        return JObject.Parse(x)["policies"][0].ToString();
+
+        /*
         var filter = Builders<BsonDocument>.Filter.Eq("username", userID) &
                      Builders<BsonDocument>.Filter.Eq("pin", pin) &
                      Builders<BsonDocument>.Filter.Eq("policies.policyID", policyID);
@@ -146,6 +157,7 @@ public class myServiceClass : System.Web.Services.WebService
         var x = collection.Find(filter).Project(projection).First().ToJson();
 
         return JObject.Parse(x)["policies"].ToString();
+        */
     }
 
     static bool addPolicyToUser(string userID, string pin, string policyID)
