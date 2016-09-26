@@ -30,36 +30,13 @@ public class myServiceClass : System.Web.Services.WebService
     static async Task vaidateUser(string userID, string validTxt, bool validPassword)
     {
         var collection = getMongoCollection("users");
-
-        using (var cursor = await collection.Find(new BsonDocument()).ToCursorAsync())
-        {
-            while (await cursor.MoveNextAsync())
-            {
-                foreach (var doc in cursor.Current)
-                {
-                    Console.WriteLine(doc);
-                }
-            }
-        }
-
-        string validateOn;
-        if (validPassword == true)  //we are validating with a password not a pin
-        {
-            validateOn = "password";
-        }
-        else
-        {
-            validateOn = "pin";
-        }
-
+        
         var builder = Builders<BsonDocument>.Filter;
-        var filter = builder.Eq("username", userID) & builder.Eq(validateOn, validTxt);
+        var filter = builder.Eq("username", userID) & builder.Eq((validPassword ? "password" : "pin"), validTxt);
 
         var res2 = collection.Find(filter).ToList();
 
         var result = await collection.Find(filter).ToListAsync();
-
-
     }
 
     static string getUserDetails(string userID, string pin)
@@ -72,7 +49,7 @@ public class myServiceClass : System.Web.Services.WebService
             .Include("title")
             .Include("forename")
             .Include("surname")
-            .Include("ppsn")
+            .Include("dob")
             .Include("mobile")
             .Include("email")
             .Include("address");
@@ -97,20 +74,9 @@ public class myServiceClass : System.Web.Services.WebService
     static bool vaidateUserSync(string userID, string validTxt, bool validPassword)
     {
         var collection = getMongoCollection("users");
-
-
-        string validateOn;
-        if (validPassword == true)  //we are validating with a password not a pin
-        {
-            validateOn = "password";
-        }
-        else
-        {
-            validateOn = "pin";
-        }
-
+        
         var builder = Builders<BsonDocument>.Filter;
-        var filter = builder.Eq("username", userID) & builder.Eq(validateOn, validTxt);
+        var filter = builder.Eq("username", userID) & builder.Eq((validPassword ? "password" : "pin"), validTxt);
 
         var res2 = collection.Find(filter).ToList();
 
@@ -178,6 +144,33 @@ public class myServiceClass : System.Web.Services.WebService
         return (userCollection.UpdateOne(userFilter, Builders<BsonDocument>.Update.Push("policies", policyDoc.First())).ModifiedCount > 0);
 
         //TODO: remove policy from policies collection once it's been added to a user.
+    }
+
+    static bool getSessionAuthStatus(string sessionID)
+    {
+        var collection = getMongoCollection("sessions");
+        var filter = Builders<BsonDocument>.Filter.Eq("_id", sessionID);
+        return (collection.Find(filter).Count() > 0);
+    }
+    
+    static string addSession(string sessionID, string userID, string pin)
+    {
+        var collection = getMongoCollection("sessions");
+        var document = new BsonDocument
+        {
+            {"_id", sessionID},
+            {"username", userID},
+            {"pin", pin}
+        };
+
+        collection.InsertOne(document);
+
+        var response = JsonConvert.SerializeObject(new
+        {
+            sessionAuthenticated = true
+        });
+
+        return response;
     }
 
     class Person
@@ -305,6 +298,35 @@ public class myServiceClass : System.Web.Services.WebService
         HttpContext.Current.Response.Write(jsonData);
         HttpContext.Current.Response.End();
     }
+
+    #region Desktop Services
+    [WebMethod]
+    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+    public void IsSessionAuthenticated(string sessionID)
+    {
+        var jsonData = JsonConvert.SerializeObject(new
+        {
+            authenticated = getSessionAuthStatus(sessionID)
+        });
+
+        //TODO: allow multiple domains
+        string origin = HttpContext.Current.Request.Headers["Origin"];
+        if (origin == null) origin = ConfigurationManager.AppSettings["GetSessionAuthStatus"];
+
+        AddHeaders(origin);
+
+        HttpContext.Current.Response.Write(jsonData);
+        HttpContext.Current.Response.End();
+    }
+
+    [WebMethod]
+    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+    public void AddSession(string sessionID, string userID, string pin)
+    {
+        HttpContext.Current.Response.Write(addSession(sessionID, userID, pin));
+        HttpContext.Current.Response.End();
+    }
+    #endregion
 
     public void AddHeaders(string origin)
     {
