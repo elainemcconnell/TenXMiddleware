@@ -111,19 +111,6 @@ public class myServiceClass : System.Web.Services.WebService
         var x = agg.First().ToJson();
 
         return JObject.Parse(x)["policies"][0].ToString();
-
-        /*
-        var filter = Builders<BsonDocument>.Filter.Eq("username", userID) &
-                     Builders<BsonDocument>.Filter.Eq("pin", pin) &
-                     Builders<BsonDocument>.Filter.Eq("policies.policyID", policyID);
-        var projection = Builders<BsonDocument>.Projection
-            .Exclude("_id")
-            .Include("policies");
-
-        var x = collection.Find(filter).Project(projection).First().ToJson();
-
-        return JObject.Parse(x)["policies"].ToString();
-        */
     }
 
     static bool addPolicyToUser(string userID, string pin, string policyID)
@@ -171,6 +158,20 @@ public class myServiceClass : System.Web.Services.WebService
         });
 
         return response;
+    }
+
+    static void getSessionUser(string sessionID, ref string userID, ref string pin)
+    {
+        var collection = getMongoCollection("sessions");
+
+        var filter = Builders<BsonDocument>.Filter.Eq("_id", sessionID);
+        var projection = Builders<BsonDocument>.Projection.Exclude("_id");
+
+        var x = collection.Find(filter).Project(projection).First().ToJson();
+
+        var json = JObject.Parse(x);
+        userID = json["username"].ToString();
+        pin = json["pin"].ToString();
     }
 
     class Person
@@ -324,6 +325,23 @@ public class myServiceClass : System.Web.Services.WebService
     public void AddSession(string sessionID, string userID, string pin)
     {
         HttpContext.Current.Response.Write(addSession(sessionID, userID, pin));
+        HttpContext.Current.Response.End();
+    }
+
+    [WebMethod]
+    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+    public void WebGetUserDetails(string sessionID)
+    {
+        string userID = "", pin = "";
+        getSessionUser(sessionID, ref userID, ref pin);
+        
+        //TODO: allow multiple domains
+        string origin = HttpContext.Current.Request.Headers["Origin"];
+        if (origin == null) origin = ConfigurationManager.AppSettings["GetSessionAuthStatus"];
+
+        AddHeaders(origin);
+
+        HttpContext.Current.Response.Write(getUserDetails(userID, pin));
         HttpContext.Current.Response.End();
     }
     #endregion
