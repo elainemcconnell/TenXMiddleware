@@ -174,36 +174,39 @@ public class myServiceClass : System.Web.Services.WebService
         pin = json["pin"].ToString();
     }
 
-    class Person
+    static string requestCallback(string userID, string requestBody)
     {
-        public ObjectId Id { get; set; }
-        public string username { get; set; }
-        public string password { get; set; }
-        public string pin { get; set; }
-        public string name { get; set; }
-        public string address { get; set; }
-        public string dob { get; set; }
+        var collection = getMongoCollection("callbacks");
+        var document = new BsonDocument
+        {
+            {"_id", Guid.NewGuid().ToString()},
+            {"username", userID},
+            {"requestTS", DateTime.Now},
+            {"requestBody", requestBody}
+        };
+
+        collection.InsertOne(document);
+
+        var response = JsonConvert.SerializeObject(new
+        {
+            callbackRequested = true
+        });
+
+        return response;
     }
 
-
-    static async Task CallMain()
+    static string getUserDevice(string userID)
     {
-        const string ConnectionString = "mongodb://etsid005181.europa.internal:27017";
-        var Client = new MongoClient(ConnectionString);
-        var blog = Client.GetDatabase("tenxtest");
-        var collection = blog.GetCollection<BsonDocument>("users");
+        var collection = getMongoCollection("users");
 
-        using (var cursor = await collection.Find(new BsonDocument()).ToCursorAsync())
-        {
-            while (await cursor.MoveNextAsync())
-            {
-                foreach (var doc in cursor.Current)
-                {
-                    Console.WriteLine(doc);
-                }
-            }
-        }
+        var filter = Builders<BsonDocument>.Filter.Eq("username", userID);
+        var projection = Builders<BsonDocument>.Projection
+            .Exclude("_id")
+            .Include("deviceID");
 
+        var x = collection.Find(filter).Project(projection).First().ToJson();
+
+        return JObject.Parse(x)["deviceID"].ToString();
     }
 
     [WebMethod]
@@ -297,6 +300,31 @@ public class myServiceClass : System.Web.Services.WebService
         });
 
         HttpContext.Current.Response.Write(jsonData);
+        HttpContext.Current.Response.End();
+    }
+
+    [WebMethod]
+    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+    public void RequestCallback(string userID, string request)
+    {
+        HttpContext.Current.Response.Write(requestCallback(userID, request));
+        HttpContext.Current.Response.End();
+    }
+
+    [WebMethod]
+    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+    public void SendPushNotif(string userID, string message)
+    {
+        string deviceID = getUserDevice(userID);
+
+        //call shanesMethod(userID, message)
+
+        var webResponse = JsonConvert.SerializeObject(new
+        {
+            messageSent = true
+        });
+
+        HttpContext.Current.Response.Write(webResponse);
         HttpContext.Current.Response.End();
     }
 
