@@ -312,23 +312,6 @@ public class myServiceClass : System.Web.Services.WebService
         HttpContext.Current.Response.End();
     }
 
-    [WebMethod]
-    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-    public void SendPushNotif(string userID, string message)
-    {
-        string deviceID = userID == "ALL" ? "/topics/global" : getUserDevice(userID);
-
-        string pushResult = PushService.SendNotification(deviceID, message);
-
-        var webResponse = JsonConvert.SerializeObject(new
-        {
-            response = pushResult
-        });
-
-        HttpContext.Current.Response.Write(webResponse);
-        HttpContext.Current.Response.End();
-    }
-
     #region Desktop Services
     [WebMethod]
     [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
@@ -371,6 +354,29 @@ public class myServiceClass : System.Web.Services.WebService
         AddHeaders(origin);
 
         HttpContext.Current.Response.Write(getUserDetails(userID, pin));
+        HttpContext.Current.Response.End();
+    }
+
+    [WebMethod]
+    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+    public void SendPushNotif(string userID, string message)
+    {
+        string deviceID = userID == "ALL" ? "/topics/global" : getUserDevice(userID);
+
+        string pushResult = PushService.SendNotification(deviceID, message);
+
+        var webResponse = JsonConvert.SerializeObject(new
+        {
+            response = pushResult
+        });
+
+        //TODO: allow multiple domains
+        string origin = HttpContext.Current.Request.Headers["Origin"];
+        if (origin == null) origin = ConfigurationManager.AppSettings["GetSessionAuthStatus"];
+
+        AddHeaders(origin);
+
+        HttpContext.Current.Response.Write(webResponse);
         HttpContext.Current.Response.End();
     }
     #endregion

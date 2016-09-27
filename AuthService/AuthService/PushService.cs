@@ -44,25 +44,35 @@ namespace AuthService
             // server key
             string GoogleAppID = "AIzaSyCmjfLbwq8jT4askR9yIKv-To5ZmUDd50g";
             var SENDER_ID = "483555755914";
-            var value = message;
 
+            /*
+            var jGcmData = new JObject();
+            var jData = new JObject();
+            bool Value;
 
+            jData.Add("message", message);
+            jData.Add("name", sender);
+            jGcmData.Add("to", "/topics/global");
+            jGcmData.Add("data", jData);
+            */
+              
             // set up connection to GCM
             WebRequest tRequest = WebRequest.Create("https://android.googleapis.com/gcm/send");
             tRequest.Method = "post";
-            tRequest.ContentType = " application/json";
+            //tRequest.ContentType = " application/json";
+            tRequest.ContentType = " application/x-www-form-urlencoded;charset=UTF-8";
             tRequest.Headers.Add(string.Format("Authorization: key={0}", GoogleAppID));
             tRequest.Headers.Add(string.Format("Sender: id={0}", SENDER_ID));
 
             // set up proxy
             WebProxy myproxy = new WebProxy("ilproxy1.europa.internal", 8080);
-            tRequest.Proxy = myproxy;           
-        
-            string postData = "collapse_key=score_update&time_to_live=108&delay_while_idle=1&data.message=" + value + "&data.time=" + System.DateTime.Now.ToString() + "&registration_id=" + deviceToken + "";
+            tRequest.Proxy = myproxy;
+            tRequest.Proxy.Credentials = new NetworkCredential(@"europa\DJTT", "DataJDev1");
+
+            //string postData = "collapse_key=score_update&time_to_live=108&delay_while_idle=1&data.message=" + message + "&data.time=" + System.DateTime.Now.ToString() + "&registration_id=" + deviceToken + "";
+            string postData = "collapse_key=score_update&time_to_live=108&delay_while_idle=1&data.message=" + message + "&data.time=" + System.DateTime.Now.ToString() + "&to=/topics/global";
             Console.WriteLine(postData);
             Byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-
-
             tRequest.ContentLength = byteArray.Length;
 
             Stream dataStream = tRequest.GetRequestStream();
