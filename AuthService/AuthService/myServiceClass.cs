@@ -317,16 +317,16 @@ public class myServiceClass : System.Web.Services.WebService
     [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
     public void IsSessionAuthenticated(string sessionID)
     {
-        var jsonData = JsonConvert.SerializeObject(new
-        {
-            authenticated = getSessionAuthStatus(sessionID)
-        });
-
         //TODO: allow multiple domains
         string origin = HttpContext.Current.Request.Headers["Origin"];
         if (origin == null) origin = ConfigurationManager.AppSettings["GetSessionAuthStatus"];
 
         AddHeaders(origin);
+
+        var jsonData = JsonConvert.SerializeObject(new
+        {
+            authenticated = getSessionAuthStatus(sessionID)
+        });
 
         HttpContext.Current.Response.Write(jsonData);
         HttpContext.Current.Response.End();
@@ -344,14 +344,14 @@ public class myServiceClass : System.Web.Services.WebService
     [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
     public void WebGetUserDetails(string sessionID)
     {
-        string userID = "", pin = "";
-        getSessionUser(sessionID, ref userID, ref pin);
-
         //TODO: allow multiple domains
         string origin = HttpContext.Current.Request.Headers["Origin"];
         if (origin == null) origin = ConfigurationManager.AppSettings["GetSessionAuthStatus"];
 
         AddHeaders(origin);
+
+        string userID = "", pin = "";
+        getSessionUser(sessionID, ref userID, ref pin);
 
         HttpContext.Current.Response.Write(getUserDetails(userID, pin));
         HttpContext.Current.Response.End();
@@ -361,6 +361,12 @@ public class myServiceClass : System.Web.Services.WebService
     [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
     public void SendPushNotif(string userID, string message)
     {
+        //TODO: allow multiple domains
+        string origin = HttpContext.Current.Request.Headers["Origin"];
+        if (origin == null) origin = ConfigurationManager.AppSettings["GetSessionAuthStatus"];
+
+        AddHeaders(origin);
+
         string deviceID = userID == "ALL" ? "/topics/global" : getUserDevice(userID);
 
         string pushResult = PushService.SendNotification(deviceID, message);
@@ -369,12 +375,6 @@ public class myServiceClass : System.Web.Services.WebService
         {
             response = pushResult
         });
-
-        //TODO: allow multiple domains
-        string origin = HttpContext.Current.Request.Headers["Origin"];
-        if (origin == null) origin = ConfigurationManager.AppSettings["GetSessionAuthStatus"];
-
-        AddHeaders(origin);
 
         HttpContext.Current.Response.Write(webResponse);
         HttpContext.Current.Response.End();
