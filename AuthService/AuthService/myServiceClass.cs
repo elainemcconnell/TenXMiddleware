@@ -14,6 +14,7 @@ using MongoDB.Driver;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using AuthService;
 
 
 [WebService]
@@ -30,7 +31,7 @@ public class myServiceClass : System.Web.Services.WebService
     static async Task vaidateUser(string userID, string validTxt, bool validPassword)
     {
         var collection = getMongoCollection("users");
-        
+
         var builder = Builders<BsonDocument>.Filter;
         var filter = builder.Eq("username", userID) & builder.Eq((validPassword ? "password" : "pin"), validTxt);
 
@@ -74,7 +75,7 @@ public class myServiceClass : System.Web.Services.WebService
     static bool vaidateUserSync(string userID, string validTxt, bool validPassword)
     {
         var collection = getMongoCollection("users");
-        
+
         var builder = Builders<BsonDocument>.Filter;
         var filter = builder.Eq("username", userID) & builder.Eq((validPassword ? "password" : "pin"), validTxt);
 
@@ -106,7 +107,7 @@ public class myServiceClass : System.Web.Services.WebService
                     .Match(new BsonDocument { { "policies.policyID", policyID } })
                     .Unwind("policies")
                     .Match(new BsonDocument { { "policies.policyID", policyID } })
-                    .Group(new BsonDocument { {"_id", "$id"}, {"policies", new BsonDocument ( "$push", "$policies" ) } } );
+                    .Group(new BsonDocument { { "_id", "$id" }, { "policies", new BsonDocument("$push", "$policies") } });
 
         var x = agg.First().ToJson();
 
@@ -139,7 +140,7 @@ public class myServiceClass : System.Web.Services.WebService
         var filter = Builders<BsonDocument>.Filter.Eq("_id", sessionID);
         return (collection.Find(filter).Count() > 0);
     }
-    
+
     static string addSession(string sessionID, string userID, string pin)
     {
         var collection = getMongoCollection("sessions");
@@ -315,13 +316,13 @@ public class myServiceClass : System.Web.Services.WebService
     [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
     public void SendPushNotif(string userID, string message)
     {
-        string deviceID = getUserDevice(userID);
+        string deviceID = userID == "ALL" ? "/topics/global" : getUserDevice(userID);
 
-        //call shanesMethod(userID, message)
+        string pushResult = PushService.SendNotification(deviceID, message);
 
         var webResponse = JsonConvert.SerializeObject(new
         {
-            messageSent = true
+            response = pushResult
         });
 
         HttpContext.Current.Response.Write(webResponse);
@@ -362,7 +363,7 @@ public class myServiceClass : System.Web.Services.WebService
     {
         string userID = "", pin = "";
         getSessionUser(sessionID, ref userID, ref pin);
-        
+
         //TODO: allow multiple domains
         string origin = HttpContext.Current.Request.Headers["Origin"];
         if (origin == null) origin = ConfigurationManager.AppSettings["GetSessionAuthStatus"];

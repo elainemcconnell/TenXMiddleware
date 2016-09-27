@@ -20,7 +20,7 @@ namespace AuthService
 
             string deviceToken = "f5radYxgXU4:APA91bGnw6g3ESFoBJAz3AwiCzHeX-oRkOf820Kp1wvV2Zb83QQDie8YdRYHzcijZ1ZcVb06xEY60cgDV-ZOvEs_GA4K1wQqT4mRLMnfkitjiVNE-kAct0lqdLh4xAMXv5-DGGSg5yMQ";
             string message = "Middle Tier Notifications test";
-            sendNotification(deviceToken, message);
+            //sendNotification(deviceToken, message);
         }
 
         /*
@@ -39,7 +39,7 @@ namespace AuthService
 
         // deviceToken is the client registration token
         // message is the message to be sent in the notification
-        public string SendNotification(string deviceToken, string message)
+        public static string SendNotification(string deviceToken, string message)
         {
             // server key
             string GoogleAppID = "AIzaSyCmjfLbwq8jT4askR9yIKv-To5ZmUDd50g";
@@ -55,8 +55,8 @@ namespace AuthService
             tRequest.Headers.Add(string.Format("Sender: id={0}", SENDER_ID));
 
             // set up proxy
-            WebProxy myproxy = new WebProxy("ilproxy1.europa.internal", 8080);
-            tRequest.Proxy = myproxy;           
+            //WebProxy myproxy = new WebProxy("ilproxy1.europa.internal", 8080);
+            //tRequest.Proxy = myproxy;           
         
             string postData = "collapse_key=score_update&time_to_live=108&delay_while_idle=1&data.message=" + value + "&data.time=" + System.DateTime.Now.ToString() + "®istration_id=" + deviceToken + "";
             Console.WriteLine(postData);
