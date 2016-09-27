@@ -8,21 +8,13 @@ using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
 using System.Collections.Specialized;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AuthService
 {
     public class PushService
     {
-
-        static void Main(string[] args)
-        {
-            // receive registration token as JSON object
-
-            string deviceToken = "f5radYxgXU4:APA91bGnw6g3ESFoBJAz3AwiCzHeX-oRkOf820Kp1wvV2Zb83QQDie8YdRYHzcijZ1ZcVb06xEY60cgDV-ZOvEs_GA4K1wQqT4mRLMnfkitjiVNE-kAct0lqdLh4xAMXv5-DGGSg5yMQ";
-            string message = "Middle Tier Notifications test";
-            //sendNotification(deviceToken, message);
-        }
-
         /*
          * Role of server
          * communicate with clients
@@ -43,36 +35,30 @@ namespace AuthService
         {
             // server key
             string GoogleAppID = "AIzaSyCmjfLbwq8jT4askR9yIKv-To5ZmUDd50g";
-            var SENDER_ID = "483555755914";
+            string SENDER_ID = "483555755914";
 
-            /*
             var jGcmData = new JObject();
             var jData = new JObject();
-            bool Value;
 
             jData.Add("message", message);
-            jData.Add("name", sender);
-            jGcmData.Add("to", "/topics/global");
+            jData.Add("name", SENDER_ID);
+            jGcmData.Add("to", deviceToken);
             jGcmData.Add("data", jData);
-            */
               
             // set up connection to GCM
             WebRequest tRequest = WebRequest.Create("https://android.googleapis.com/gcm/send");
             tRequest.Method = "post";
-            //tRequest.ContentType = " application/json";
-            tRequest.ContentType = " application/x-www-form-urlencoded;charset=UTF-8";
+            tRequest.ContentType = " application/json";
             tRequest.Headers.Add(string.Format("Authorization: key={0}", GoogleAppID));
-            tRequest.Headers.Add(string.Format("Sender: id={0}", SENDER_ID));
 
             // set up proxy
-            WebProxy myproxy = new WebProxy("ilproxy1.europa.internal", 8080);
-            tRequest.Proxy = myproxy;
-            tRequest.Proxy.Credentials = new NetworkCredential(@"europa\DJTT", "DataJDev1");
+            if (WebRequest.GetSystemWebProxy().GetProxy(tRequest.RequestUri) != tRequest.RequestUri)
+            {
+                tRequest.Proxy = WebRequest.GetSystemWebProxy();
+                tRequest.Proxy.Credentials = CredentialCache.DefaultNetworkCredentials;
+            }
 
-            //string postData = "collapse_key=score_update&time_to_live=108&delay_while_idle=1&data.message=" + message + "&data.time=" + System.DateTime.Now.ToString() + "&registration_id=" + deviceToken + "";
-            string postData = "collapse_key=score_update&time_to_live=108&delay_while_idle=1&data.message=" + message + "&data.time=" + System.DateTime.Now.ToString() + "&to=/topics/global";
-            Console.WriteLine(postData);
-            Byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+            Byte[] byteArray = Encoding.UTF8.GetBytes(jGcmData.ToString());
             tRequest.ContentLength = byteArray.Length;
 
             Stream dataStream = tRequest.GetRequestStream();
