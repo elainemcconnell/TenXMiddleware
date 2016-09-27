@@ -55,10 +55,10 @@ namespace AuthService
             tRequest.Headers.Add(string.Format("Sender: id={0}", SENDER_ID));
 
             // set up proxy
-            //WebProxy myproxy = new WebProxy("ilproxy1.europa.internal", 8080);
-            //tRequest.Proxy = myproxy;           
+            WebProxy myproxy = new WebProxy("ilproxy1.europa.internal", 8080);
+            tRequest.Proxy = myproxy;           
         
-            string postData = "collapse_key=score_update&time_to_live=108&delay_while_idle=1&data.message=" + value + "&data.time=" + System.DateTime.Now.ToString() + "®istration_id=" + deviceToken + "";
+            string postData = "collapse_key=score_update&time_to_live=108&delay_while_idle=1&data.message=" + value + "&data.time=" + System.DateTime.Now.ToString() + "&registration_id=" + deviceToken + "";
             Console.WriteLine(postData);
             Byte[] byteArray = Encoding.UTF8.GetBytes(postData);
 
