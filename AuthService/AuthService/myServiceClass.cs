@@ -210,6 +210,27 @@ public class myServiceClass : System.Web.Services.WebService
         return JObject.Parse(x)["deviceID"].ToString();
     }
 
+    static string storeUserDevice(string userID, string deviceID)
+    {
+        var collection = getMongoCollection("users");
+
+        var filter = Builders<BsonDocument>.Filter.Eq("username", userID);
+        var update = Builders<BsonDocument>.Update.Set("deviceID", deviceID);
+
+        var result = collection.UpdateOne(filter, update);
+
+        bool updated = false;
+        if (result.IsModifiedCountAvailable)
+            updated = (result.ModifiedCount > 0 );
+
+        var response = JsonConvert.SerializeObject(new
+        {
+            userUpdated = updated
+        });
+
+        return response;
+    }
+
     [WebMethod]
     [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
     public void AuthenticateWithPassword(string userID, string password)
@@ -309,6 +330,14 @@ public class myServiceClass : System.Web.Services.WebService
     public void RequestCallback(string userID, string request)
     {
         HttpContext.Current.Response.Write(requestCallback(userID, request));
+        HttpContext.Current.Response.End();
+    }
+
+    [WebMethod]
+    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+    public void StoreUserDevice(string userID, string deviceID)
+    {
+        HttpContext.Current.Response.Write(storeUserDevice(userID, deviceID));
         HttpContext.Current.Response.End();
     }
 
