@@ -10,6 +10,8 @@
 <link rel="stylesheet" href="css/lato.css">
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/main.css">
+
+    <link rel="stylesheet" href="css/style.css">
     <link rel="shortcut icon" href="favicon.ico">
 
 </head>
@@ -23,13 +25,15 @@
 	</nav>
  </div>
 
+
  <div class="page-content">
  	 <h4>My Irishlife Web</h4>
+
  	 <div class="tab-content">
 		<p>To use My Irish Life on your desktop please scan the code </p>
 		<div id="qrcode" class="qrcode"></div>
 	</div>
-     <div id="countdown"></div>
+
  </div>
 
  <footer>
@@ -59,10 +63,34 @@ var qrcode = new QRCode(document.getElementById("qrcode"), {
 
 function makeCode () {
 	// add in session id etc
-	qrcode.makeCode("www.irishlife.ie");
+	//qrcode.makeCode("www.irishlife.ie");
+    qrcode.makeCode(uuid);
 }
 
+function generateUUID() {
+    var d = new Date().getTime();
+    if(window.performance && typeof window.performance.now === "function"){
+        d += performance.now();; //use high-precision timer if available
+    }
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+};
+
+function httpGet(theUrl)
+{
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+}
+
+var uuid = generateUUID();
 makeCode();
+
 
 $("#text").
 	on("blur", function () {
@@ -74,12 +102,70 @@ $("#text").
 		}
 	});
 
+function pollAuthService() {
+
+    // your function code here
+    IsAuthenticated();
+    setTimeout(pollAuthService, 5000);
+}
+
+pollAuthService();
+
 (function countdown(remaining) {
     if(remaining === 0)
-        location.reload(true);
-    document.getElementById('countdown').innerHTML = remaining;
+    {
+      //  IsAuthenticated();
+
+    }
+    //IsAuthenticated();
+    //location.reload(true);
+    //document.getElementById('countdown').innerHTML = remaining;
     setTimeout(function(){ countdown(remaining - 1); }, 1000);
 })(5);
+
+
+var xmlHttp = null;
+
+function IsAuthenticated()
+{
+
+    var Url = "http://10.233.204.232:9090/AutService.asmx/IsSessionAuthenticated?sessionID=" + uuid;
+
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = ProcessRequest;
+    xmlHttp.open( "GET", Url, true );
+    xmlHttp.send( null );
+}
+
+function ProcessRequest()
+{
+    if ( xmlHttp.readyState == 4 && xmlHttp.status == 200 )
+    {
+        if ( xmlHttp.responseText == "Not found" )
+        {
+            window.location.href = "landingPage.html?uuid=" + "da70bf27-dfe1-4cb5-9874-c400daa765d3";
+        }
+        else
+        {
+            var info = eval ( "(" + xmlHttp.responseText + ")" );
+
+            // No parsing necessary with JSON! TG
+            if (info.authenticated)
+            {
+                window.location.href = "landingPage.html?uuid=" + uuid;
+                //document.getElementById("isauth").value = "Is Authenticated";
+            }
+            else
+            {
+                window.location.href = "landingPage.html?uuid=" + "da70bf27-dfe1-4cb5-9874-c400daa765d3";
+                //document.getElementById("isauth").value = "Is NOT Authenticated";
+            }
+
+        }
+    }
+}
+
+
 </script>
 </body>
 </html>

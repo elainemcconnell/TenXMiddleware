@@ -1,0 +1,164 @@
+<!doctype html>
+<html>
+<head>
+<title>My Irishlife Web</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="qrcode.js"></script>
+
+<link rel="stylesheet" href="css/lato.css">
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/main.css">
+    <link rel="shortcut icon" href="favicon.ico">
+
+</head>
+<body>
+
+ <div class="layer san-marino">
+ 	<nav class="navbar navbar-default san-marino">
+		<div class="container-fluid">
+			<a class="navbar-brand logo" href="./"></a>
+		</div>
+	</nav>
+ </div>
+
+ <div>
+
+ </div>
+
+ <div class="page-content">
+     <h4><h4>Welcome
+         <text id="txtName"></text>, you are now authenticated.</h4></h4>
+
+     <div class="tab-content">
+         <h3>My Irish Life Web</h3>
+         <div class="row">
+             <label id="lblName">Name :</label>
+             <text id="txtFName"></text>
+             <text id="txtSName"></text>
+         </div>
+         <div class="row">
+             <label id="lblmobile">Mobile :</label>
+             <text id="txtmobile"></text>
+         </div>
+         <div class="row">
+             <label id="lblemail">e-Mail :</label>
+             <text id="txtemail"></text>
+         </div>
+         <div class="row">
+             <label id="lbladdress">Address :</label>
+             <text id="txtaddress"></text>
+         </div>
+     </div>
+ </div>
+
+ <footer>
+         <div class="container">
+             <div class="row">
+                 <div class="col-lg-12 copyright">
+                     <p>Irish Life Assurance plc is regulated by the Central Bank of Ireland.</p>
+                     <p>In the interest of customer service we may record and monitor calls. Irish Life Assurance plc. Registered in Ireland number 152576, Vat number 9F55923G.</p>
+                     <p>Registered office is situated at Irish Life Centre, Lower Abbey Street, Dublin 1.</p>
+                     <p>The pages of this site are issued in the Republic of Ireland and are for the information of Republic
+                     of Ireland residents in relation to Republic of Ireland products only. Access to this Web site and use
+                     of the information on it is subject to the <a href="./page-terms.html">Terms and Conditions</a> of the Site.
+                     By proceeding further you will be deemed to have understood and agreed to be bound by
+                     these terms and conditions. If this is not acceptable to you, you should exit this site now. Irish Life Assurance plc is
+                     regulated by the Central Bank of Ireland.</p>
+                 </div>
+             </div>
+        </div>
+    </footer>
+
+
+<script type="text/javascript">
+
+    var xmlHttp = null;
+    var fname = null;
+    var sname = null;
+    var email = null;
+    var address = null;
+    var mobile = null;
+    var dob = null;
+
+    var uuid = getParameterByName('uuid');
+
+
+    function GetCustomerInfo()
+    {
+        //da70bf27-dfe1-4cb5-9874-c400daa765d3
+
+        var Url = "http://10.233.204.232:9090/AutService.asmx/WebGetUserDetails?sessionID=" + uuid;
+        //var Url = "http://10.233.204.232:9090/AutService.asmx/WebGetUserDetails?sessionID=da70bf27-dfe1-4cb5-9874-c400daa765d3";
+
+        xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = ProcessRequest;
+        xmlHttp.open( "GET", Url, true );
+        xmlHttp.send( null );
+    }
+
+    function ProcessRequest()
+    {
+
+        if ( xmlHttp.readyState == 4 && xmlHttp.status == 200 )
+        {
+            if ( xmlHttp.responseText == "Not found" )
+            {
+                // No parsing necessary with JSON!
+                name = "Not Found";
+                dob = "Not Found";
+            }
+            else
+            {
+                var info = eval ( "(" + xmlHttp.responseText + ")" );
+
+                // No parsing necessary with JSON!
+                fname = info.forename;
+                sname = info.surname;
+                mobile = info.mobile;
+                email = info.email;
+                address = info.address;
+
+            }
+        }
+    }
+    GetCustomerInfo();
+
+    function addLoadEvent(func) {
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+            window.onload = func;
+        } else {
+            window.onload = function() {
+                if (oldonload) {
+                    oldonload();
+                }
+                func();
+            }
+        }
+    }
+
+    addLoadEvent(function() {
+
+        document.getElementById('txtName').innerHTML = fname;
+        document.getElementById('txtFName').innerHTML = fname;
+        document.getElementById('txtSName').innerHTML = sname;
+        document.getElementById('txtmobile').innerHTML = mobile;
+        document.getElementById('txtemail').innerHTML = email;
+        document.getElementById('txtaddress').innerHTML = address;
+
+    });
+
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+</script>
+</body>
+</html>
