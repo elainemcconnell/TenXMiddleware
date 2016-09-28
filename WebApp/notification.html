@@ -4,13 +4,21 @@
 <title>My Irishlife Web</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
-<script type="text/javascript" src="jquery.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/3.2.0/anchor.js"></script>
+
+
+<!-- <script type="text/javascript" src="jquery.min.js"></script> -->
 <script type="text/javascript" src="qrcode.js"></script>
+<script type="text/javascript" src="bootbox.min.js"></script>
 
 <link rel="stylesheet" href="css/lato.css">
 <link rel="stylesheet" href="css/bootstrap.min.css">
-<link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/main.css">
     <link rel="shortcut icon" href="favicon.ico">
+
 
 </head>
 <body>
@@ -28,28 +36,36 @@
  </div>
 
  <div class="page-content">
-     <h4><h4>Welcome
-         <text id="txtName"></text>, you are now authenticated.</h4></h4>
-
      <div class="tab-content">
-         <h3>My Irish Life Web</h3>
+         <h3>Send Push Notification</h3>
+         <div class="input-group">
+             <span class="input-group-addon">
+                <input type="radio" name="sendTo" value="all" checked="checked"> All<br>
+                <input type="radio" name="sendTo" value="one" id="chkOne"> One<br>
+             </span>
+         </div>
+
+
+         <div id="userID" style="display: none">
+             <div class="input-group input-group-sm">
+                 <span class="input-group-addon" id="sizing-addon3">@</span>
+                 <input type="text" class="form-control" placeholder="Username" aria-describedby="sizing-addon3" id="txtname">
+             </div>
+
+         </div>
+
+         <span></span>
          <div class="row">
-             <label id="lblName">Name :</label>
-             <text id="txtFName"></text>
-             <text id="txtSName"></text>
+                    <label id="lblmessage">Message :</label>
          </div>
          <div class="row">
-             <label id="lblmobile">Mobile :</label>
-             <text id="txtmobile"></text>
+             <textarea rows="4" cols="70" id="txtmessage"></textarea>
          </div>
-         <div class="row">
-             <label id="lblemail">e-Mail :</label>
-             <text id="txtemail"></text>
-         </div>
-         <div class="row">
-             <label id="lbladdress">Address :</label>
-             <text id="txtaddress"></text>
-         </div>
+
+     <div class="btn-group" role="group" aria-label="...">
+         <button type="button" class="btn btn-primary" onclick="sendData();">Send</button>
+     </div>
+
      </div>
  </div>
 
@@ -82,21 +98,32 @@
     var mobile = null;
     var dob = null;
 
-    var uuid = getParameterByName('uuid');
 
 
-    function GetCustomerInfo()
+    function sendData()
     {
-        //da70bf27-dfe1-4cb5-9874-c400daa765d3
 
-        //var Url = "http://52.174.106.218/AutService.asmx/WebGetUserDetails?sessionID=da70bf27-dfe1-4cb5-9874-c400daa765d3";
-        var Url = "http://52.174.106.218/AutService.asmx/WebGetUserDetails?sessionID=" + uuid;
-        //var Url = "http://10.233.204.232:9090/AutService.asmx/WebGetUserDetails?sessionID=" + uuid;
+        var sendTo;
+        if (document.getElementById('chkOne').checked){
+            sendTo = document.getElementById('txtname').value;
+        }
+        else {
+            sendTo = "ALL";
+        }
 
-        xmlHttp = new XMLHttpRequest();
-        xmlHttp.onreadystatechange = ProcessRequest;
-        xmlHttp.open( "GET", Url, true );
-        xmlHttp.send( null );
+        var msg = document.getElementById('txtmessage').value;
+
+        if (!msg){
+            bootbox.alert("You must enter in a message!");
+        }
+        else {
+            var Url = "http://52.174.106.218/AutService.asmx/SendPushNotif?userID=" + sendTo + "&message=" + msg;
+
+            xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = ProcessRequest;
+            xmlHttp.open( "GET", Url, true );
+            xmlHttp.send( null );
+        }
     }
 
     function ProcessRequest()
@@ -113,25 +140,13 @@
             else
             {
                 var info = eval ( "(" + xmlHttp.responseText + ")" );
-
-                // No parsing necessary with JSON!
-                fname = info.forename;
-                sname = info.surname;
-                mobile = info.mobile;
-                email = info.email;
-                address = info.address;
-
-                document.getElementById('txtName').innerHTML = fname;
-                document.getElementById('txtFName').innerHTML = fname;
-                document.getElementById('txtSName').innerHTML = sname;
-                document.getElementById('txtmobile').innerHTML = mobile;
-                document.getElementById('txtemail').innerHTML = email;
-                document.getElementById('txtaddress').innerHTML = address;
-
+                bootbox.alert("Your notification(s) have been sent!");
+                document.getElementById('txtmessage').value = "";
+                document.getElementById('txtname').value = "";
             }
         }
     }
-    GetCustomerInfo();
+
 
     function addLoadEvent(func) {
         var oldonload = window.onload;
@@ -147,26 +162,17 @@
         }
     }
 
-    addLoadEvent(function() {
-
-        document.getElementById('txtName').innerHTML = fname;
-        document.getElementById('txtFName').innerHTML = fname;
-        document.getElementById('txtSName').innerHTML = sname;
-        document.getElementById('txtmobile').innerHTML = mobile;
-        document.getElementById('txtemail').innerHTML = email;
-        document.getElementById('txtaddress').innerHTML = address;
-
+    $(function() {
+        $('input[name="sendTo"]').on('click', function() {
+            if ($(this).val() == 'one') {
+                $('#userID').show();
+            }
+            else {
+                $('#userID').hide();
+            }
+        });
     });
 
-    function getParameterByName(name, url) {
-        if (!url) url = window.location.href;
-        name = name.replace(/[\[\]]/g, "\\$&");
-        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-                results = regex.exec(url);
-        if (!results) return null;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, " "));
-    }
 </script>
 </body>
 </html>

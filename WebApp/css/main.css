@@ -72,3 +72,15 @@ footer .col-lg-12 {
 footer .copyright p {
     font-size: 11px;
 }
+
+input[type=radio] {
+    display: inline;
+}
+
+input
+{
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    border:solid 1px black;
+    padding:5px;
+}

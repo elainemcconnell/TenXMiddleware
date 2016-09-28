@@ -129,7 +129,9 @@ var xmlHttp = null;
 function IsAuthenticated()
 {
 
-    var Url = "http://10.233.204.232:9090/AutService.asmx/IsSessionAuthenticated?sessionID=" + uuid;
+
+    var Url = "http://52.174.106.218/AutService.asmx/IsSessionAuthenticated?sessionID=" + uuid;
+    //var Url = "http://10.233.204.232:9090/AutService.asmx/IsSessionAuthenticated?sessionID=" + uuid;
 
     xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = ProcessRequest;
@@ -139,30 +141,34 @@ function IsAuthenticated()
 
 function ProcessRequest()
 {
-    if ( xmlHttp.readyState == 4 && xmlHttp.status == 200 )
+    if (xmlHttp)
     {
-        if ( xmlHttp.responseText == "Not found" )
+        if ( xmlHttp.readyState == 4 && xmlHttp.status == 200 )
         {
-            window.location.href = "landingPage.html?uuid=" + "da70bf27-dfe1-4cb5-9874-c400daa765d3";
-        }
-        else
-        {
-            var info = eval ( "(" + xmlHttp.responseText + ")" );
-
-            // No parsing necessary with JSON! TG
-            if (info.authenticated)
+            if ( xmlHttp.responseText == "Not found" )
             {
-                window.location.href = "landingPage.html?uuid=" + uuid;
-                //document.getElementById("isauth").value = "Is Authenticated";
+                //window.location.href = "landingPage.html?uuid=" + "da70bf27-dfe1-4cb5-9874-c400daa765d3";
             }
             else
             {
-                window.location.href = "landingPage.html?uuid=" + "da70bf27-dfe1-4cb5-9874-c400daa765d3";
-                //document.getElementById("isauth").value = "Is NOT Authenticated";
-            }
+                var info = eval ( "(" + xmlHttp.responseText + ")" );
 
+                // No parsing necessary with JSON! TG
+                if (info.authenticated)
+                {
+                    window.location.href = "landingPage.html?uuid=" + uuid;
+                    //document.getElementById("isauth").value = "Is Authenticated";
+                }
+                else
+                {
+                    //window.location.href = "landingPage.html?uuid=" + "da70bf27-dfe1-4cb5-9874-c400daa765d3";
+                    //document.getElementById("isauth").value = "Is NOT Authenticated";
+                }
+
+            }
         }
     }
+
 }
 
 
