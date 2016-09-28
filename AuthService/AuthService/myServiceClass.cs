@@ -22,9 +22,8 @@ public class myServiceClass : System.Web.Services.WebService
 {
     static IMongoCollection<BsonDocument> getMongoCollection(string collectionName)
     {
-        const string ConnectionString = "mongodb://etsid005181.europa.internal:27017";
-        var Client = new MongoClient(ConnectionString);
-        var blog = Client.GetDatabase("tenxtest");
+        MongoClient Client = new MongoClient(ConfigurationManager.AppSettings["MongoConnectString"]);
+        IMongoDatabase blog = Client.GetDatabase(ConfigurationManager.AppSettings["MongoDatabase"]);
         return blog.GetCollection<BsonDocument>(collectionName);
     }
 
@@ -348,7 +347,7 @@ public class myServiceClass : System.Web.Services.WebService
     {
         //TODO: allow multiple domains
         string origin = HttpContext.Current.Request.Headers["Origin"];
-        if (origin == null) origin = ConfigurationManager.AppSettings["GetSessionAuthStatus"];
+        if (origin == null) origin = ConfigurationManager.AppSettings["AllowedWebOrigin"];
 
         AddHeaders(origin);
 
@@ -375,7 +374,7 @@ public class myServiceClass : System.Web.Services.WebService
     {
         //TODO: allow multiple domains
         string origin = HttpContext.Current.Request.Headers["Origin"];
-        if (origin == null) origin = ConfigurationManager.AppSettings["GetSessionAuthStatus"];
+        if (origin == null) origin = ConfigurationManager.AppSettings["AllowedWebOrigin"];
 
         AddHeaders(origin);
 
@@ -397,7 +396,7 @@ public class myServiceClass : System.Web.Services.WebService
     {
         //TODO: allow multiple domains
         string origin = HttpContext.Current.Request.Headers["Origin"];
-        if (origin == null) origin = ConfigurationManager.AppSettings["GetSessionAuthStatus"];
+        if (origin == null) origin = ConfigurationManager.AppSettings["AllowedWebOrigin"];
 
         AddHeaders(origin);
 
