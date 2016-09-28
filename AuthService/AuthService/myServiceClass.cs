@@ -382,7 +382,12 @@ public class myServiceClass : System.Web.Services.WebService
         string userID = "", pin = "";
         getSessionUser(sessionID, ref userID, ref pin);
 
-        HttpContext.Current.Response.Write(getUserDetails(userID, pin));
+        JObject response = JObject.Parse(getUserDetails(userID, pin));
+        JArray policies = JArray.Parse(getUserPolicyList(userID, pin));
+
+        response.Add("policies", policies);
+
+        HttpContext.Current.Response.Write(response);
         HttpContext.Current.Response.End();
     }
 
