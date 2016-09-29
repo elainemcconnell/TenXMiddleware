@@ -40,6 +40,7 @@ namespace AuthService
             var jGcmData = new JObject();
             var jData = new JObject();
 
+            jData.Add("msgID", new Random().Next().ToString());
             jData.Add("message", message);
             jData.Add("name", SENDER_ID);
             jGcmData.Add("to", deviceToken);
