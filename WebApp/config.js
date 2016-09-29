@@ -1,3 +1,3 @@
 var config = {
-    server: '52.174.106.218'
+    server: 'http://testlife.cloudapp.net/'
 }
