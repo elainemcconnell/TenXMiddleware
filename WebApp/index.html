@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
 <script type="text/javascript" src="jquery.min.js"></script>
 <script type="text/javascript" src="qrcode.js"></script>
+    <script type="text/javascript" src="config.js"></script>
 
 <link rel="stylesheet" href="css/lato.css">
 <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -91,6 +92,9 @@ function httpGet(theUrl)
 var uuid = generateUUID();
 makeCode();
 
+if (config.server == 'good') doStuff();
+
+
 
 $("#text").
 	on("blur", function () {
@@ -130,7 +134,10 @@ function IsAuthenticated()
 {
 
 
-    var Url = "http://52.174.106.218/AutService.asmx/IsSessionAuthenticated?sessionID=" + uuid;
+    var Url = "http://" + config.server + "/AutService.asmx/IsSessionAuthenticated?sessionID=" + uuid;
+
+    //var Url = "http://52.174.106.218/AutService.asmx/IsSessionAuthenticated?sessionID=" + uuid;
+
     //var Url = "http://10.233.204.232:9090/AutService.asmx/IsSessionAuthenticated?sessionID=" + uuid;
 
     xmlHttp = new XMLHttpRequest();

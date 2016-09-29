@@ -11,7 +11,8 @@
 
 
 <!-- <script type="text/javascript" src="jquery.min.js"></script> -->
-<script type="text/javascript" src="qrcode.js"></script>
+    <script type="text/javascript" src="qrcode.js"></script>
+    <script type="text/javascript" src="config.js"></script>
 <script type="text/javascript" src="bootbox.min.js"></script>
 
 <link rel="stylesheet" href="css/lato.css">
@@ -117,7 +118,7 @@
             bootbox.alert("You must enter in a message!");
         }
         else {
-            var Url = "http://52.174.106.218/AutService.asmx/SendPushNotif?userID=" + sendTo + "&message=" + msg;
+            var Url = "http://" + config.server + "/AutService.asmx/SendPushNotif?userID=" + sendTo + "&message=" + msg;
 
             xmlHttp = new XMLHttpRequest();
             xmlHttp.onreadystatechange = ProcessRequest;

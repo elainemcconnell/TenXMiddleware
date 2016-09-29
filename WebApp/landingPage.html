@@ -4,8 +4,14 @@
 <title>My Irishlife Web</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
-<script type="text/javascript" src="jquery.min.js"></script>
-<script type="text/javascript" src="qrcode.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/3.2.0/anchor.js"></script>
+
+    <!-- <script type="text/javascript" src="jquery.min.js"></script> -->
+    <script type="text/javascript" src="qrcode.js"></script>
+    <script type="text/javascript" src="config.js"></script>
+    <script type="text/javascript" src="bootbox.min.js"></script>
 
 <link rel="stylesheet" href="css/lato.css">
 <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -50,6 +56,25 @@
              <label id="lbladdress">Address :</label>
              <text id="txtaddress"></text>
          </div>
+
+         <br />
+         <br />
+
+         <div class="list-group">
+             <li id="pension" class="list-group-item" onclick="showInformation('Pension');">
+                 <h4 class="list-group-item-heading">Pension Products</h4>
+                 <p class="list-group-item-text" id="pensionProducts">No Pension Products Found</p>
+             </li>
+             <li id="Investment" class="list-group-item" onclick="showInformation('Investment');">
+                 <h4 class="list-group-item-heading">Investment Products</h4>
+                 <p class="list-group-item-text" id="investmentProducts">No Investment Products Found</p>
+             </li>
+             <li id="health" class="list-group-item" onclick="showInformation('Health');">
+                 <h4 class="list-group-item-heading">Health Products</h4>
+                 <p class="list-group-item-text" id="healthProducts">No Health Products Found</p>
+             </li>
+         </div>
+
      </div>
  </div>
 
@@ -82,12 +107,18 @@
     var mobile = null;
     var dob = null;
 
+    function showInformation(fromButton){
+        bootbox.alert("Here we will have details of your " + fromButton + " policies.");
+    }
+
     var uuid = getParameterByName('uuid');
 
 
     function GetCustomerInfo()
     {
         //da70bf27-dfe1-4cb5-9874-c400daa765d3
+
+        // WORKS var Url = "http://" + config.server + "/AutService.asmx/WebGetUserDetails?sessionID=" + uuid;
 
         //var Url = "http://52.174.106.218/AutService.asmx/WebGetUserDetails?sessionID=da70bf27-dfe1-4cb5-9874-c400daa765d3";
         var Url = "http://52.174.106.218/AutService.asmx/WebGetUserDetails?sessionID=" + uuid;
@@ -120,6 +151,59 @@
                 mobile = info.mobile;
                 email = info.email;
                 address = info.address;
+                var bHasPension = false;
+                var bHasHealth = false;
+                var bHasInvestment = false;
+                var policies = info.policies;
+                for(var i = 0; i < policies.length; i++) {
+                    if (policies[i].policyType == "Pension")
+                    {
+                        if (!bHasPension) {
+                            bHasPension = true;
+                            document.getElementById('pensionProducts').innerHTML = "<br />" + policies[i].policyID;
+                        }
+                        else {
+                            document.getElementById('pensionProducts').innerHTML = document.getElementById('pensionProducts').innerHTML + "<br />" + policies[i].policyID;
+                        }
+                    }
+                    if (policies[i].policyType == "Health")
+                    {
+                        if (!bHasHealth) {
+                            bHasHealth = true;
+                            document.getElementById('healthProducts').innerHTML = "<br />" + policies[i].policyID;
+                        }
+                        else {
+                            document.getElementById('healthProducts').innerHTML = document.getElementById('healthProducts').innerHTML + "<br />" + policies[i].policyID;
+                        }
+                    }
+                    if (policies[i].policyType == "Investment")
+                    {
+                        if (!bHasInvestment) {
+                            bHasInvestment = true;
+                            document.getElementById('investmentProducts').innerHTML = "<br />" + policies[i].policyID;
+                        }
+                        else {
+                            document.getElementById('investmentProducts').innerHTML = document.getElementById('investmentProducts').innerHTML + "<br />" + policies[i].policyID;
+                        }
+                    }
+
+                    // Make one that has products active - Priority - Pension, Investment & then Health//
+                    if (bHasPension){
+                        document.getElementById("pension").className = "list-group-item active";
+                    }
+                    else if (bHasInvestment){
+                        document.getElementById("investment").className = "list-group-item active";
+                    }
+                    else if (bHasHealth){
+                        document.getElementById("health").className = "list-group-item active";
+                    }
+                }
+
+
+
+                //document.getElementById("pension").className = "list-group-item";
+                //document.getElementById("health").className = "list-group-item active";
+
 
                 document.getElementById('txtName').innerHTML = fname;
                 document.getElementById('txtFName').innerHTML = fname;
@@ -128,6 +212,7 @@
                 document.getElementById('txtemail').innerHTML = email;
                 document.getElementById('txtaddress').innerHTML = address;
 
+                //document.getElementById('healthProducts').value = policies[1].policyType;
             }
         }
     }
@@ -167,6 +252,19 @@
         if (!results[2]) return '';
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     }
+
+    $(function(){
+        console.log('ready');
+
+        $('.list-group li').click(function(e) {
+            e.preventDefault()
+
+            $that = $(this);
+
+            $that.parent().find('li').removeClass('active');
+            $that.addClass('active');
+        });
+    })
 </script>
 </body>
 </html>
