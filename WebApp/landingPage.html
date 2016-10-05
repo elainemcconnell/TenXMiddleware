@@ -65,7 +65,11 @@
                  <h4 class="list-group-item-heading">Pension Products</h4>
                  <p class="list-group-item-text" id="pensionProducts">No Pension Products Found</p>
              </li>
-             <li id="Investment" class="list-group-item" onclick="showInformation('Investment');">
+             <li id="life" class="list-group-item" onclick="showInformation('Life');">
+                 <h4 class="list-group-item-heading">Life Products</h4>
+                 <p class="list-group-item-text" id="lifeProducts">No Life Products Found</p>
+             </li>
+             <li id="investment" class="list-group-item" onclick="showInformation('Investment');">
                  <h4 class="list-group-item-heading">Investment Products</h4>
                  <p class="list-group-item-text" id="investmentProducts">No Investment Products Found</p>
              </li>
@@ -118,7 +122,8 @@
     {
         //da70bf27-dfe1-4cb5-9874-c400daa765d3
 
-        var Url = "http://" + config.server + "/AutService.asmx/WebGetUserDetails?sessionID=" + uuid;
+        //var Url = "http://" + config.server + "/AutService.asmx/WebGetUserDetails?sessionID=" + uuid;
+        var Url = "http://" + config.server + "/AutService.asmx/WebGetUserDetails?sessionID=8f3f6236-15a3-4687-9cd1-50c2a12d1d10";
 
         //var Url = "http://52.174.106.218/AutService.asmx/WebGetUserDetails?sessionID=da70bf27-dfe1-4cb5-9874-c400daa765d3";
         //var Url = "http://52.174.106.218/AutService.asmx/WebGetUserDetails?sessionID=" + uuid;
@@ -153,6 +158,7 @@
                 address = info.address;
                 var bHasPension = false;
                 var bHasHealth = false;
+                var bHasLife = false;
                 var bHasInvestment = false;
                 var policies = info.policies;
                 for(var i = 0; i < policies.length; i++) {
@@ -186,10 +192,23 @@
                             document.getElementById('investmentProducts').innerHTML = document.getElementById('investmentProducts').innerHTML + "<br />" + policies[i].policyID;
                         }
                     }
+                    if (policies[i].policyType == "Life")
+                    {
+                        if (!bHasLife) {
+                            bHasLife = true;
+                            document.getElementById('lifeProducts').innerHTML = "<br />" + policies[i].policyID;
+                        }
+                        else {
+                            document.getElementById('lifeProducts').innerHTML = document.getElementById('lifeProducts').innerHTML + "<br />" + policies[i].policyID;
+                        }
+                    }
 
-                    // Make one that has products active - Priority - Pension, Investment & then Health//
+                    // Make one that has products active - Priority - Pension, Life, Investment & then Health//
                     if (bHasPension){
                         document.getElementById("pension").className = "list-group-item active";
+                    }
+                    else if (bHasLife){
+                        document.getElementById("life").className = "list-group-item active";
                     }
                     else if (bHasInvestment){
                         document.getElementById("investment").className = "list-group-item active";
@@ -200,19 +219,12 @@
                 }
 
 
-
-                //document.getElementById("pension").className = "list-group-item";
-                //document.getElementById("health").className = "list-group-item active";
-
-
                 document.getElementById('txtName').innerHTML = fname;
                 document.getElementById('txtFName').innerHTML = fname;
                 document.getElementById('txtSName').innerHTML = sname;
                 document.getElementById('txtmobile').innerHTML = mobile;
                 document.getElementById('txtemail').innerHTML = email;
                 document.getElementById('txtaddress').innerHTML = address;
-
-                //document.getElementById('healthProducts').value = policies[1].policyType;
             }
         }
     }
