@@ -120,14 +120,10 @@
 
     function GetCustomerInfo()
     {
-        //da70bf27-dfe1-4cb5-9874-c400daa765d3
-
-        //var Url = "http://" + config.server + "/AutService.asmx/WebGetUserDetails?sessionID=" + uuid;
-        var Url = "http://" + config.server + "/AutService.asmx/WebGetUserDetails?sessionID=8f3f6236-15a3-4687-9cd1-50c2a12d1d10";
-
+        var Url = "http://" + config.server + "/AutService.asmx/WebGetUserDetails?sessionID=" + uuid;
+        //var Url = "http://" + config.server + "/AutService.asmx/WebGetUserDetails?sessionID=8f3f6236-15a3-4687-9cd1-50c2a12d1d10";
         //var Url = "http://52.174.106.218/AutService.asmx/WebGetUserDetails?sessionID=da70bf27-dfe1-4cb5-9874-c400daa765d3";
         //var Url = "http://52.174.106.218/AutService.asmx/WebGetUserDetails?sessionID=" + uuid;
-        //var Url = "http://10.233.204.232:9090/AutService.asmx/WebGetUserDetails?sessionID=" + uuid;
 
         xmlHttp = new XMLHttpRequest();
         xmlHttp.onreadystatechange = ProcessRequest;
